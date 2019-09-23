@@ -5,8 +5,11 @@ import com.sun.javadoc.RootDoc
 
 import net.jakartaee.tools.netdoc.model.*
 import net.jakartaee.tools.netdoc.Util
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class NetConnectionDetector {
+	private static final Logger log = LoggerFactory.getLogger(NetConnectionDetector.class);
 	private static final String NET_IMPORT_PATH = ".net.";
 	private static final String URLCONNECTION_CLASS = "URLConnection";
 	private static final String SERVER_SOCKET_CLASS = "ServerSocket";
@@ -37,7 +40,7 @@ class NetConnectionDetector {
 		
 		for ( ClassDoc anImport : Arrays.asList(cd.importedClasses())) {
 			String i = anImport.toString();
-			//System.out.println("Got Import: " + i);
+			//log.debug("Got Import: " + i);
 			if ( i.contains(NET_IMPORT_PATH) ) {
 				if ( i.contains(URLCONNECTION_CLASS)) {
 					hasUrlImport = true;

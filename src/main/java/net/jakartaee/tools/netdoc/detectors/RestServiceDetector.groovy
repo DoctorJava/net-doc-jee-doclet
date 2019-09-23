@@ -9,8 +9,11 @@ import com.sun.javadoc.AnnotationDesc.ElementValuePair
 
 import net.jakartaee.tools.netdoc.model.*
 import net.jakartaee.tools.netdoc.Util
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class RestServiceDetector {
+	private static final Logger log = LoggerFactory.getLogger(RestServiceDetector.class);
 	private static final String JAXRS_PKG = "javax.ws.rs.";
 	private static final String JAXRS_PATH = JAXRS_PKG + "Path";
 	private static enum JAXRS_VERB {GET, PUT, POST, DELETE};
@@ -70,9 +73,9 @@ class RestServiceDetector {
 	}
 	
 	public String getJaxRsVerb( AnnotationDesc[] methodAnnotations ) {
-		//System.out.println("Looking for Verbs in annotations: " + methodAnnotations);
+		//log.debug("Looking for Verbs in annotations: " + methodAnnotations);
 		for ( JAXRS_VERB verb : JAXRS_VERB.values()) {
-			//System.out.println("Looking for Verb: " + verb);
+			//log.debug("Looking for Verb: " + verb);
 			for ( AnnotationDesc ad : methodAnnotations ) {
 				String typeName = ad.annotationType().qualifiedName();
 				if (typeName.equals( JAXRS_PKG + verb)) return verb;

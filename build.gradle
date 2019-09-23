@@ -25,10 +25,15 @@ task fatJar(type: Jar) {
 }
 
 dependencies {
+	// !!! compile is a deprected method, replaced by implementation/api.  However, I am using it in the above TRIGGER to bundle with the java file
+	// perhaps these should all be implementation, but I was having trouble including the in this doclet.jar
 	compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.5.8'
 	
 	compile files("${System.getProperty('java.home')}/../lib/tools.jar")
-	//compile files("D:/dev/tools/groovy/groovy-2.4.16/embeddable/groovy-all-2.4.16.jar")
-	//compile files("D:/dev/tools/groovy/groovy-2.4.16/embeddable/groovy-all-2.4.16-indy.jar")
+	
+	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+	compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+
 	
 }

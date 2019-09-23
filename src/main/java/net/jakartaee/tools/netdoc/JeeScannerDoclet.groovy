@@ -1,5 +1,8 @@
 package net.jakartaee.tools.netdoc
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import com.sun.javadoc.RootDoc
 
 import net.jakartaee.tools.netdoc.detectors.ServletDetector
@@ -12,21 +15,23 @@ import net.jakartaee.tools.netdoc.Util
 import groovy.json.JsonOutput
 
 class JeeScannerDoclet {
+	private static final Logger log = LoggerFactory.getLogger(JeeScannerDoclet.class);
+	
 	public static  boolean start(RootDoc doc) {
 				
-		System.out.println("--- Starting NetDoc JEE Doclet ---");
+		log.debug("--- Starting NetDoc JEE Doclet ---");
 		
 		List<Servlet> servlets = new ServletDetector().findServlets(doc);
-		System.out.println("Found Servlets: " + servlets);
+		log.debug("Found Servlets: " + servlets);
 
 		List<Service> services = new RestServiceDetector().findRestServices(doc);
-		System.out.println("Found REST Service: " + services);
+		log.debug("Found REST Service: " + services);
 		
 		List<WebSocket> sockets = new WebSocketDetector().findWebSockets(doc);
-		System.out.println("Found Web Sockets: " + sockets);
+		log.debug("Found Web Sockets: " + sockets);
 		
 		List<NetConnection> connections = new NetConnectionDetector().findNetConnections(doc);
-		System.out.println("Found Net Connections: " + connections);
+		log.debug("Found Net Connections: " + connections);
 		
 		Info myInfo = new Info(title: "MyAppName", version: "0.2")
 		
@@ -41,15 +46,18 @@ class JeeScannerDoclet {
 		def OUT_HTML = "D:/dev/tools/NetDoc/net-doc-jee-report_"+myInfo.getTitle()+".html"
 		
 		def jOut = JsonOutput.toJson(report)
-		File outJson = new File(OUT_JSON)
-		outJson.write(JsonOutput.prettyPrint(jOut))
+		//File outJson = new File(OUT_JSON)
+		//outJson.write(JsonOutput.prettyPrint(jOut))
 		
-		//System.out.println("Got HTML: " + Util.convertJsToHtml(Util.convertJsonToJs(jOut)) );
-		File outHtml = new File(OUT_HTML)
-		outHtml.write( Util.convertJsToHtml( Util.convertJsonToJs(jOut) ) );
+		//println('Done writing JSON report.')
+		System.out.println(jOut);
+			
+		//log.debug("Got HTML: " + Util.convertJsToHtml(Util.convertJsonToJs(jOut)) );
+		//File outHtml = new File(OUT_HTML)
+		//outHtml.write( Util.convertJsToHtml( Util.convertJsonToJs(jOut) ) );
 
-		System.out.println("Wrote Report: " + OUT_JSON);
-		System.out.println("--- Finished JeeScannerDoclet  ---");
+		log.debug("Wrote Report: " + OUT_JSON);
+		log.debug("--- Finished JeeScannerDoclet  ---");
 		return true;
 	}
 }

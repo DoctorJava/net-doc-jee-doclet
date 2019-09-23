@@ -1,6 +1,9 @@
 package net.jakartaee.tools.netdoc.detectors
 
 import com.sun.javadoc.RootDoc
+
+import org.slf4j.Logger
+
 import com.sun.javadoc.AnnotationDesc
 import com.sun.javadoc.ClassDoc
 import com.sun.javadoc.MethodDoc
@@ -9,8 +12,11 @@ import com.sun.javadoc.AnnotationDesc.ElementValuePair
 
 import net.jakartaee.tools.netdoc.model.*
 import net.jakartaee.tools.netdoc.Util
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class WebSocketDetector {
+	private static final Logger log = LoggerFactory.getLogger(WebSocketDetector.class);
 	private static final String SOCKET_ANNOTAION = "ServerEndpoint";
 	
 	public List<WebSocket> findWebSockets(RootDoc root){
