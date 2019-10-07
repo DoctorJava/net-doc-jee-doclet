@@ -9,6 +9,7 @@ import net.jakartaee.tools.netdoc.detectors.ServletDetector
 import net.jakartaee.tools.netdoc.detectors.WebSocketDetector
 import net.jakartaee.tools.netdoc.detectors.NetConnectionDetector
 import net.jakartaee.tools.netdoc.detectors.RestServiceDetector
+import net.jakartaee.tools.netdoc.detectors.SpringServiceDetector
 import net.jakartaee.tools.netdoc.model.*
 import net.jakartaee.tools.netdoc.Util
 
@@ -19,22 +20,37 @@ class JeeScannerDoclet {
 	
 	public static  boolean start(RootDoc doc) {
 				
-		log.debug("--- Starting NetDoc JEE Doclet ---");
+		log.debug("--- Starting NetDoc JEE Doclet --- ");
 		
 		List<Servlet> servlets = new ServletDetector().findServlets(doc);
 		log.debug("Found Servlets: " + servlets);
 
 		List<Service> services = new RestServiceDetector().findRestServices(doc);
-		log.debug("Found REST Service: " + services);
+		log.debug("Found JEE REST Service: " + services);
+
+		// TODO:  Trying to trap errors. But this doesn't seem to work
+		//			Note: Got errors before I added to Spring-Sample gradle: 	implementation group: 'org.springframework.boot', name: 'spring-boot-loader', version: '2.1.9.RELEASE'
+
+//		try{
+			List<Service> springServices = new SpringServiceDetector().findSpringServices(doc);
+			log.debug("Found Spring Service: " + springServices);
 		
+			services.addAll(springServices);					// JEE and Spring have different detectors, but the NetDoc output treats them as equals
+//		}catch(Exception e) {
+//			log.debug("Error getting Spring Service: " + e);
+//			
+//		}
+
 		List<WebSocket> sockets = new WebSocketDetector().findWebSockets(doc);
 		log.debug("Found Web Sockets: " + sockets);
 		
 		List<NetConnection> connections = new NetConnectionDetector().findNetConnections(doc);
 		log.debug("Found Net Connections: " + connections);
+
 		
 		Info myInfo = new Info(title: "MyAppName", version: "0.2")
 		
+
 		Report report = new Report( info: myInfo, 
 									servlets: servlets, 
 									services: services, 

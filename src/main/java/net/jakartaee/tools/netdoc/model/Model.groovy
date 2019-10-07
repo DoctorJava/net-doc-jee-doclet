@@ -25,13 +25,13 @@ class Servlet {
 	List<UrlPattern> urlPatterns
 }
 
-enum SERVICE_TYPE{REST, SOAP}
+enum SERVICE_TYPE{JEE_REST, SPRING_REST, SOAP}
 
 @ToString			// This was the original working version
 class Service {
 	String className		// class is a reserved work.
 	String packageName		// package is a reserved work.
-	SERVICE_TYPE type = SERVICE_TYPE.REST
+	SERVICE_TYPE type = SERVICE_TYPE.JEE_REST
 	List<UrlPattern> urlPatterns
 	List<RestMethod> methods
 }
