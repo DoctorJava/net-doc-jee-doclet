@@ -55,6 +55,7 @@ class SocketEndpoint{
 @ToString
 class RestMethod {
 	String verb
+	List<String> urlPatterns
 	String method
 	List<String> params
 }

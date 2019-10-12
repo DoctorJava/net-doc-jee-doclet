@@ -45,14 +45,17 @@ class RestServiceDetector {
 		
 		
 		List<RestMethod> rsMethods= new ArrayList<>();
+		
 		for ( MethodDoc method: cd.methods() ) {
 			String rsVerb = getJaxRsVerb(method.annotations());
 			if ( rsVerb != null ) {
+				
 				List<String> paramNames = new ArrayList<>();
+				
 				for ( Parameter param : method.parameters()) {
 					paramNames.add(param.name());
 				}
-				RestMethod rsm = new RestMethod(verb: rsVerb,method: method.name(), params: paramNames);
+				RestMethod rsm = new RestMethod(verb: rsVerb, urlPatterns: urlPatterns, method: method.name(), params: paramNames);
 				rsMethods.add(rsm);
 			}
 		}

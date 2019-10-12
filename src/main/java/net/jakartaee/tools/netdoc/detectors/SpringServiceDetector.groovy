@@ -12,7 +12,6 @@ import com.sun.javadoc.AnnotationValue
 
 import net.jakartaee.tools.netdoc.model.*
 import net.jakartaee.tools.netdoc.Util
-import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class SpringServiceDetector {
@@ -21,7 +20,7 @@ class SpringServiceDetector {
 	private static final String SPRING_PATH = SPRING_PKG + "RestController";
 	//private static final String SPRING_MAPPING = SPRING_PKG + "RequestMapping";
 	
-	public enum RequestMethod { GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE };    // This is from org.springframework.web.bind.annotation.RequestMethod
+	public enum mappingPREFIX { GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE };    // This is from org.springframework.web.bind.annotation.RequestMethod
 	private static enum SPRING_MAPPING {RequestMapping, GetMapping, PostMapping, PutMapping, DeleteMapping, PatchMapping};
 	
 	public List<Service> findSpringServices(RootDoc root){
@@ -102,7 +101,9 @@ class SpringServiceDetector {
 					// System.out.println("                Got "+mappingName+" Mapping: " + ad);
 					String path = null;
 					List<String> verbs = new ArrayList<>();
-					String eValue = mappingName.replace("Mapping","").toUpperCase();
+					String mappingType = mappingName.replace("Mapping","").toUpperCase();
+
+					List<String> urlPatterns = new ArrayList<>();
 
 					for ( ElementValuePair evp : ad.elementValues() ) {
 
@@ -110,6 +111,7 @@ class SpringServiceDetector {
 						{
 							case "value":
 								path = evp.value().value().toString();
+								urlPatterns.add(path);
 								break;
 							case "method":									// Example {org.springframework.web.bind.annotation.RequestMethod.GET, org.springframework.web.bind.annotation.RequestMethod.POST}
 								String methodsStr = evp.value().value().toString().replace("{","").replace("}","").replace("[","").replace("]","");  // remove brackets
@@ -123,14 +125,16 @@ class SpringServiceDetector {
 								log.debug("Got unknown annotation element: " + evp);
 						}
 					}
-					// System.out.println(" >>>>>>>>>>Started with ("+eValue+") verbs ("+("REQUEST".equals(eValue) && verbs.size() == 0)+") : " + verbs);
-					if ("REQUEST".equals(eValue) && verbs.size() == 0) {
-						verbs.addAll(Arrays.asList(RequestMethod.values()));
+					
+					if ( verbs.size() == 0 ) {
+						//if ("REQUEST".equals(mappingType) ) verbs.addAll(Arrays.asList(mappingPREFIX.values()));
+						if ("REQUEST".equals(mappingType) ) verbs.add(mappingPREFIX.values());
+						else verbs.add(mappingType);
 					}
 
 					// System.out.println(" >>>>>>>>>>Ended with ("+eValue+") verbs: " + verbs);
 					for ( String verb : verbs) {
-						RestMethod rsm = new RestMethod(verb: verb,method: path, params: null);
+						RestMethod rsm = new RestMethod(verb: verb, urlPatterns: urlPatterns, params: null);
 						rsMethods.add(rsm);
 					}
 				}
