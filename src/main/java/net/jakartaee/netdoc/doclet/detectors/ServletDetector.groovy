@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc.detectors
+package net.jakartaee.netdoc.doclet.detectors
 
 import com.sun.javadoc.AnnotationDesc
 import com.sun.javadoc.ClassDoc
@@ -7,13 +7,17 @@ import com.sun.javadoc.Parameter
 import com.sun.javadoc.RootDoc
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
 
-import net.jakartaee.tools.netdoc.model.*
-import net.jakartaee.tools.netdoc.Util
+import net.jakartaee.netdoc.doclet.Util
+import net.jakartaee.netdoc.doclet.model.Servlet
+import net.jakartaee.netdoc.doclet.model.URLPATTERN_CONFIG
+import net.jakartaee.netdoc.doclet.model.UrlPattern
+import net.jakartaee.tools.netdoc.doclet.model.*
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class ServletDetector {
-	private static final Logger log = LoggerFactory.getLogger(ServletDetector.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServletDetector.class);
 	private static final String SERVLET_CLASS = "javax.servlet.GenericServlet";
 	
 	private static final String space = "           ";
@@ -22,20 +26,24 @@ class ServletDetector {
 		ClassDoc[] classDocs = root.classes();
 		List<Servlet> servlets = new ArrayList<>();
 		for ( ClassDoc cd : classDocs ) {
-			Servlet s = getServlet(cd);
-			
-			if ( s == null) continue;	// Ignore classes that are not Servlets
+			try{
+				Servlet s = getServlet(cd);
 
-			log.debug("Got servlet: "+ s)
-			servlets.add (s);			
+				if ( s == null) continue;	// Ignore classes that are not Servlets
+
+				logger.debug("Got servlet: "+ s)
+				servlets.add (s);
+			} catch (Exception e) {
+				logger.error("Error in ServletDetector.findServlets(): " + e.toString() + ": " + e.getStackTrace());
+			}
 		}
 		return servlets;
-	}
+}
 
 	private Servlet getServlet(ClassDoc cd) {
 		ClassDoc cdServlet = cd.findClass(SERVLET_CLASS);
 		
-		log.debug("Got Servlet interfaces: " + cdServlet.getMetaPropertyValues());
+		logger.debug("Got Servlet interfaces: " + cdServlet.getMetaPropertyValues());
 
 		if ( cd == null || cdServlet == null || !cd.subclassOf(cdServlet) ) return; 	// Ignore classes that are not subclasses of javax.servlet.GenericServlet
 		
@@ -70,10 +78,10 @@ class ServletDetector {
 		String returnStr;
 		for ( AnnotationDesc ad : Arrays.asList(cd.annotations()) ) {
 			for (ElementValuePair p : ad.elementValues()) {
-				log.debug("Checking AnnotationDesc name: " + p.element().name() + " value: " + p.value().value());
+				logger.debug("Checking AnnotationDesc name: " + p.element().name() + " value: " + p.value().value());
 				if ( "urlPatterns".equals(p.element().name()) || "value".equals(p.element().name()) ) {
 					String values =  p.value().value().toString();
-					log.debug("Got AnnotationDesc name: " + p.element().name() + " value: " + values);
+					logger.debug("Got AnnotationDesc name: " + p.element().name() + " value: " + values);
 					//annotations.add(p.value().value());
 					//returnStr = values.replace("\"", "'");	
 					returnStr = values;	

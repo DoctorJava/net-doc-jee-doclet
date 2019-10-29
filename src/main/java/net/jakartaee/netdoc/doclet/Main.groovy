@@ -1,39 +1,43 @@
-package net.jakartaee.tools.netdoc
+package net.jakartaee.netdoc.doclet
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import com.sun.javadoc.RootDoc
 
-import net.jakartaee.tools.netdoc.detectors.ServletDetector
-import net.jakartaee.tools.netdoc.detectors.WebSocketDetector
-import net.jakartaee.tools.netdoc.detectors.NetConnectionDetector
-import net.jakartaee.tools.netdoc.detectors.RestServiceDetector
-import net.jakartaee.tools.netdoc.detectors.SpringServiceDetector
-import net.jakartaee.tools.netdoc.model.*
-import net.jakartaee.tools.netdoc.Util
-
+import net.jakartaee.tools.netdoc.doclet.model.*
+import net.jakartaee.netdoc.doclet.detectors.NetConnectionDetector
+import net.jakartaee.netdoc.doclet.detectors.RestServiceDetector
+import net.jakartaee.netdoc.doclet.detectors.ServletDetector
+import net.jakartaee.netdoc.doclet.detectors.SpringServiceDetector
+import net.jakartaee.netdoc.doclet.detectors.WebSocketDetector
+import net.jakartaee.netdoc.doclet.model.Info
+import net.jakartaee.netdoc.doclet.model.NetConnection
+import net.jakartaee.netdoc.doclet.model.Report
+import net.jakartaee.netdoc.doclet.model.Service
+import net.jakartaee.netdoc.doclet.model.Servlet
+import net.jakartaee.netdoc.doclet.model.WebSocket
 import groovy.json.JsonOutput
 
-class JeeScannerDoclet {
-	private static final Logger log = LoggerFactory.getLogger(JeeScannerDoclet.class);
+class Main {
+	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	public static  boolean start(RootDoc doc) {
 				
-		log.debug("--- Starting NetDoc JEE Doclet --- ");
+		logger.debug("--- Starting NetDoc JEE Doclet --- ");
 		
 		List<Servlet> servlets = new ServletDetector().findServlets(doc);
-		log.debug("Found Servlets: " + servlets);
+		logger.debug("Found Servlets: " + servlets);
 
 		List<Service> services = new RestServiceDetector().findRestServices(doc);
-		log.debug("Found JEE REST Service: " + services);
+		logger.debug("Found JEE REST Service: " + services);
 
 		// TODO:  Trying to trap errors. But this doesn't seem to work
 		//			Note: Got errors before I added to Spring-Sample gradle: 	implementation group: 'org.springframework.boot', name: 'spring-boot-loader', version: '2.1.9.RELEASE'
 
 //		try{
 			List<Service> springServices = new SpringServiceDetector().findSpringServices(doc);
-			log.debug("Found Spring Service: " + springServices);
+			logger.debug("Found Spring Service: " + springServices);
 		
 			services.addAll(springServices);					// JEE and Spring have different detectors, but the NetDoc output treats them as equals
 //		}catch(Exception e) {
@@ -42,10 +46,10 @@ class JeeScannerDoclet {
 //		}
 
 		List<WebSocket> sockets = new WebSocketDetector().findWebSockets(doc);
-		log.debug("Found Web Sockets: " + sockets);
+		logger.debug("Found Web Sockets: " + sockets);
 		
 		List<NetConnection> connections = new NetConnectionDetector().findNetConnections(doc);
-		log.debug("Found Net Connections: " + connections);
+		logger.debug("Found Net Connections: " + connections);
 
 		
 		Info myInfo = new Info(title: "MyAppName", version: "0.2")
@@ -58,8 +62,8 @@ class JeeScannerDoclet {
 									connections: connections );
 								
 
-		def OUT_JSON = "D:/dev/tools/NetDoc/net-doc-jee-report_"+myInfo.getTitle()+".json"
-		def OUT_HTML = "D:/dev/tools/NetDoc/net-doc-jee-report_"+myInfo.getTitle()+".html"
+		//def OUT_JSON = "D:/dev/tools/NetDoc/net-doc-jee-report_"+myInfo.getTitle()+".json"
+		//def OUT_HTML = "D:/dev/tools/NetDoc/net-doc-jee-report_"+myInfo.getTitle()+".html"
 		
 		def jOut = JsonOutput.toJson(report)
 		//File outJson = new File(OUT_JSON)
@@ -72,8 +76,8 @@ class JeeScannerDoclet {
 		//File outHtml = new File(OUT_HTML)
 		//outHtml.write( Util.convertJsToHtml( Util.convertJsonToJs(jOut) ) );
 
-		log.debug("Wrote Report: " + OUT_JSON);
-		log.debug("--- Finished JeeScannerDoclet  ---");
+		//logger.debug("Wrote Report: " + OUT_JSON);
+		logger.debug("--- Finished JeeScannerDoclet  ---");
 		return true;
 	}
 }

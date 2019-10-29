@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc.model
+package net.jakartaee.netdoc.doclet.model
 import groovy.transform.ToString
 
 @ToString

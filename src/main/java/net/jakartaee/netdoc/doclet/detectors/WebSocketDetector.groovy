@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc.detectors
+package net.jakartaee.netdoc.doclet.detectors
 
 import com.sun.javadoc.RootDoc
 
@@ -10,24 +10,32 @@ import com.sun.javadoc.MethodDoc
 import com.sun.javadoc.Parameter
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
 
-import net.jakartaee.tools.netdoc.model.*
-import net.jakartaee.tools.netdoc.Util
+import net.jakartaee.netdoc.doclet.Util
+import net.jakartaee.netdoc.doclet.model.SOCKET_TYPE
+import net.jakartaee.netdoc.doclet.model.SocketEndpoint
+import net.jakartaee.netdoc.doclet.model.WebSocket
+import net.jakartaee.tools.netdoc.doclet.model.*
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class WebSocketDetector {
-	private static final Logger log = LoggerFactory.getLogger(WebSocketDetector.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketDetector.class);
 	private static final String SOCKET_ANNOTAION = "ServerEndpoint";
 	
 	public List<WebSocket> findWebSockets(RootDoc root){
 		ClassDoc[] classDocs = root.classes();
 		List<WebSocket> webSockets = new ArrayList<>();
 		for ( ClassDoc cd : classDocs ) {
-			WebSocket ws = getWebSockets(cd);
-			
-			if ( ws == null )  continue;	// Ignore classes that are not WebSocket
-			
-			webSockets.add (ws);			
+			try {
+				WebSocket ws = getWebSockets(cd);
+
+				if ( ws == null )  continue;	// Ignore classes that are not WebSocket
+
+				webSockets.add (ws);
+			} catch (Exception e) {
+				logger.error("Error in WebSocketDetector.findWebSockets(): " + e.toString() + ": " + e.getStackTrace());
+			}
 		}
 		return webSockets;
 	}

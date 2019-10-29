@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc.detectors
+package net.jakartaee.netdoc.doclet.detectors
 
 import org.slf4j.Logger
 
@@ -10,12 +10,17 @@ import com.sun.javadoc.RootDoc
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
 import com.sun.javadoc.AnnotationValue
 
-import net.jakartaee.tools.netdoc.model.*
-import net.jakartaee.tools.netdoc.Util
+import net.jakartaee.netdoc.doclet.Util
+import net.jakartaee.netdoc.doclet.model.RestMethod
+import net.jakartaee.netdoc.doclet.model.Service
+import net.jakartaee.netdoc.doclet.model.URLPATTERN_CONFIG
+import net.jakartaee.netdoc.doclet.model.UrlPattern
+import net.jakartaee.tools.netdoc.doclet.model.*
+
 import org.slf4j.LoggerFactory
 
 class SpringServiceDetector {
-	private static final Logger log = LoggerFactory.getLogger(SpringServiceDetector.class);
+	private static final Logger logger = LoggerFactory.getLogger(SpringServiceDetector.class);
 	private static final String SPRING_PKG = "org.springframework.web.bind.annotation.";
 	private static final String SPRING_PATH = SPRING_PKG + "RestController";
 	//private static final String SPRING_MAPPING = SPRING_PKG + "RequestMapping";
@@ -28,12 +33,15 @@ class SpringServiceDetector {
 		ClassDoc[] classDocs = root.classes();
 		List<Service> restServices = new ArrayList<>();
 		for ( ClassDoc cd : classDocs ) {
-			Service rs = getRestService(cd);
-			
-			if ( rs == null )  continue;	// Ignore classes that are not RestServices
-			
-			restServices.add (rs);
-			
+			try {
+				Service rs = getRestService(cd);
+
+				if ( rs == null )  continue;	// Ignore classes that are not RestServices
+
+				restServices.add (rs);
+			} catch (Exception e) {
+				logger.error("Error in SpringServiceDetector.findSpringServices(): " + e.toString() + ": " + e.getStackTrace());
+			}
 		}
 		return restServices;
 	}
@@ -122,7 +130,7 @@ class SpringServiceDetector {
 								}
 								break;
 							default:
-								log.debug("Got unknown annotation element: " + evp);
+								logger.debug("Got unknown annotation element: " + evp);
 						}
 					}
 					

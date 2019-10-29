@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc;
+package net.jakartaee.netdoc.doclet;
 
 import com.sun.javadoc.ClassDoc;
 

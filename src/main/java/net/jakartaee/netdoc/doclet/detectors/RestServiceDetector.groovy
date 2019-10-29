@@ -1,4 +1,4 @@
-package net.jakartaee.tools.netdoc.detectors
+package net.jakartaee.netdoc.doclet.detectors
 
 import com.sun.javadoc.AnnotationDesc
 import com.sun.javadoc.ClassDoc
@@ -7,13 +7,18 @@ import com.sun.javadoc.Parameter
 import com.sun.javadoc.RootDoc
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
 
-import net.jakartaee.tools.netdoc.model.*
-import net.jakartaee.tools.netdoc.Util
+import net.jakartaee.netdoc.doclet.Util
+import net.jakartaee.netdoc.doclet.model.RestMethod
+import net.jakartaee.netdoc.doclet.model.Service
+import net.jakartaee.netdoc.doclet.model.URLPATTERN_CONFIG
+import net.jakartaee.netdoc.doclet.model.UrlPattern
+import net.jakartaee.tools.netdoc.doclet.model.*
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class RestServiceDetector {
-	private static final Logger log = LoggerFactory.getLogger(RestServiceDetector.class);
+	private static final Logger logger = LoggerFactory.getLogger(RestServiceDetector.class);
 	private static final String JAXRS_PKG = "javax.ws.rs.";
 	private static final String JAXRS_PATH = JAXRS_PKG + "Path";
 	private static enum JAXRS_VERB {GET, PUT, POST, DELETE};
@@ -23,15 +28,19 @@ class RestServiceDetector {
 		ClassDoc[] classDocs = root.classes();
 		//Map<String, RestService> restServices = new HashMap<>();
 		List<Service> restServices = new ArrayList<>();
-		
+
 		for ( ClassDoc cd : classDocs ) {
-			Service rs = getRestService(cd);
-			
-			if ( rs == null )  continue;	// Ignore classes that are not RestServices
-			
-			//restServices.put (rs.className, rs);
-			restServices.add (rs);
-			
+
+			try {
+				Service rs = getRestService(cd);
+
+				if ( rs == null )  continue;	// Ignore classes that are not RestServices
+
+				//restServices.put (rs.className, rs);
+				restServices.add (rs);
+			} catch (Exception e) {
+				logger.error("Error in RestServiceDetector.findRestServices(): " + e.toString() + ": " + e.getStackTrace());
+			}
 		}
 		return restServices;
 	}
