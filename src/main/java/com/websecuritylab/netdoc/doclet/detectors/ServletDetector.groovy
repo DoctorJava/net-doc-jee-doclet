@@ -1,4 +1,4 @@
-package net.jakartaee.netdoc.doclet.detectors
+package com.websecuritylab.netdoc.doclet.detectors
 
 import com.sun.javadoc.AnnotationDesc
 import com.sun.javadoc.ClassDoc
@@ -6,12 +6,10 @@ import com.sun.javadoc.MethodDoc
 import com.sun.javadoc.Parameter
 import com.sun.javadoc.RootDoc
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
-
-import net.jakartaee.netdoc.doclet.Util
-import net.jakartaee.netdoc.doclet.model.Servlet
-import net.jakartaee.netdoc.doclet.model.URLPATTERN_CONFIG
-import net.jakartaee.netdoc.doclet.model.UrlPattern
-import net.jakartaee.tools.netdoc.doclet.model.*
+import com.websecuritylab.netdoc.doclet.Util
+import com.websecuritylab.netdoc.doclet.model.Servlet
+import com.websecuritylab.netdoc.doclet.model.URLPATTERN_CONFIG
+import com.websecuritylab.netdoc.doclet.model.UrlPattern
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

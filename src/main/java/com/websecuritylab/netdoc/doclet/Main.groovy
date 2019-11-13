@@ -1,22 +1,21 @@
-package net.jakartaee.netdoc.doclet
+package com.websecuritylab.netdoc.doclet
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import com.sun.javadoc.RootDoc
+import com.websecuritylab.netdoc.doclet.detectors.NetConnectionDetector
+import com.websecuritylab.netdoc.doclet.detectors.RestServiceDetector
+import com.websecuritylab.netdoc.doclet.detectors.ServletDetector
+import com.websecuritylab.netdoc.doclet.detectors.SpringServiceDetector
+import com.websecuritylab.netdoc.doclet.detectors.WebSocketDetector
+import com.websecuritylab.netdoc.doclet.model.Info
+import com.websecuritylab.netdoc.doclet.model.NetConnection
+import com.websecuritylab.netdoc.doclet.model.Report
+import com.websecuritylab.netdoc.doclet.model.Service
+import com.websecuritylab.netdoc.doclet.model.Servlet
+import com.websecuritylab.netdoc.doclet.model.WebSocket
 
-import net.jakartaee.tools.netdoc.doclet.model.*
-import net.jakartaee.netdoc.doclet.detectors.NetConnectionDetector
-import net.jakartaee.netdoc.doclet.detectors.RestServiceDetector
-import net.jakartaee.netdoc.doclet.detectors.ServletDetector
-import net.jakartaee.netdoc.doclet.detectors.SpringServiceDetector
-import net.jakartaee.netdoc.doclet.detectors.WebSocketDetector
-import net.jakartaee.netdoc.doclet.model.Info
-import net.jakartaee.netdoc.doclet.model.NetConnection
-import net.jakartaee.netdoc.doclet.model.Report
-import net.jakartaee.netdoc.doclet.model.Service
-import net.jakartaee.netdoc.doclet.model.Servlet
-import net.jakartaee.netdoc.doclet.model.WebSocket
 import groovy.json.JsonOutput
 
 class Main {

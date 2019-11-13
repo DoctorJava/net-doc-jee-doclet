@@ -1,4 +1,4 @@
-package net.jakartaee.netdoc.doclet.detectors
+package com.websecuritylab.netdoc.doclet.detectors
 
 import com.sun.javadoc.RootDoc
 
@@ -9,12 +9,10 @@ import com.sun.javadoc.ClassDoc
 import com.sun.javadoc.MethodDoc
 import com.sun.javadoc.Parameter
 import com.sun.javadoc.AnnotationDesc.ElementValuePair
-
-import net.jakartaee.netdoc.doclet.Util
-import net.jakartaee.netdoc.doclet.model.SOCKET_TYPE
-import net.jakartaee.netdoc.doclet.model.SocketEndpoint
-import net.jakartaee.netdoc.doclet.model.WebSocket
-import net.jakartaee.tools.netdoc.doclet.model.*
+import com.websecuritylab.netdoc.doclet.Util
+import com.websecuritylab.netdoc.doclet.model.SOCKET_TYPE
+import com.websecuritylab.netdoc.doclet.model.SocketEndpoint
+import com.websecuritylab.netdoc.doclet.model.WebSocket
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

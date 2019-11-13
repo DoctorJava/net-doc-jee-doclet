@@ -1,11 +1,9 @@
-package net.jakartaee.netdoc.doclet.detectors
+package com.websecuritylab.netdoc.doclet.detectors
 
 import com.sun.javadoc.ClassDoc
 import com.sun.javadoc.RootDoc
-
-import net.jakartaee.netdoc.doclet.Util
-import net.jakartaee.netdoc.doclet.model.NetConnection
-import net.jakartaee.tools.netdoc.doclet.model.*
+import com.websecuritylab.netdoc.doclet.Util
+import com.websecuritylab.netdoc.doclet.model.NetConnection
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

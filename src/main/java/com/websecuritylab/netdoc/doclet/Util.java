@@ -1,4 +1,4 @@
-package net.jakartaee.netdoc.doclet;
+package com.websecuritylab.netdoc.doclet;
 
 import com.sun.javadoc.ClassDoc;
 

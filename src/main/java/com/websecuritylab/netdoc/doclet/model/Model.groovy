@@ -1,4 +1,4 @@
-package net.jakartaee.netdoc.doclet.model
+package com.websecuritylab.netdoc.doclet.model
 import groovy.transform.ToString
 
 @ToString
